@@ -1,0 +1,113 @@
+.seatContainer {
+  /* background-color: red; */
+}
+
+.seat {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  background-color: #8b814c;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  margin-bottom: 30px;
+}
+
+.overlay {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba(106, 76, 59, 0.8);
+  color: #fff;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.playerIcon {
+  width: 40px;
+  height: 40px;
+}
+.seatId {
+  position: absolute;
+  color: white;
+  margin-top: 60px;
+  font-size: 25px;
+}
+
+.selected {
+  border: 1px solid #7fff00; /* 绿色边框 */
+  box-shadow: 0 0 5px 5px #7fff00; /* 绿色阴影 */
+  box-sizing: border-box;
+}
+
+.myself {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 13px;
+  background-color: #548b54;
+  margin-left: 40px;
+  margin-top: 40px;
+  color: #fff;
+}
+
+.candidate {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 13px;
+  background-color: #fff;
+  margin-right: 40px;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+.sheriff {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 13px;
+  margin-right: 40px;
+  margin-top: 40px;
+  color: #fff;
+}
+
+.nightInfo {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 13px;
+  background-color: #8b0000;
+  margin-left: 40px;
+  margin-bottom: 40px;
+  color: #8b814c;
+}
+
+.goodPeople {
+  background-color: #8b0000;
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 13px;
+  margin-left: 40px;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+.raiseHandIcon {
+  width: 25px;
+  height: 25px;
+  color: #000;
+}

@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { RoomService } from './room.service';
+import { Room } from './room.schema';
 
 @Controller('rooms')
 export class RoomController {
@@ -13,9 +14,33 @@ export class RoomController {
   @Post(':roomId/join')
   async joinRoom(
     @Param('roomId') roomId: string,
-    @Body('seatId') seatId: number,
+    @Body('seatId') seatId: string,
   ) {
     const room = await this.roomService.joinRoom(roomId, seatId);
+    if (!room) {
+      throw new Error('Room or seat not found');
+    }
+    return room;
+  }
+
+  @Post(':roomId/record')
+  async updateRoomRecords(
+    @Param('roomId') roomId: string,
+    @Body('records') records: string[],
+  ) {
+    const room = await this.roomService.updateRoomRecords(roomId, records);
+    if (!room) {
+      throw new Error('Room not found');
+    }
+    return room;
+  }
+
+  @Post(':roomId')
+  async updateRoom(
+    @Param('roomId') roomId: string,
+    @Body('roomAttribute') roomAttribute: Partial<Room>,
+  ) {
+    const room = await this.roomService.updateRoom(roomId, roomAttribute);
     if (!room) {
       throw new Error('Room or seat not found');
     }
@@ -29,10 +54,5 @@ export class RoomController {
       throw new Error('Room not found');
     }
     return room;
-  }
-
-  @Post(':roomId/start')
-  async startGame(@Param('roomId') roomId: string) {
-    return this.roomService.startGame(roomId);
   }
 }

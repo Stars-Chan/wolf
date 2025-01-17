@@ -1,7 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import Login from "./pages/Login";
 import Waiting from "./pages/Waiting";
-import Game from "./pages/Game";
+import Night from "./pages/Night";
+import Daytime from "./pages/Daytime";
 
 const router = createBrowserRouter([
   {
@@ -13,8 +14,16 @@ const router = createBrowserRouter([
     element: <Waiting />,
   },
   {
-    path: "/game",
-    element: <Game />,
+    path: "/night",
+    element: <Night />,
+  },
+  {
+    path: "/daytime",
+    element: <Daytime />,
+  },
+  {
+    path: "/night",
+    element: <Night />,
   },
 ]);
 
