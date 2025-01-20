@@ -394,6 +394,8 @@ const Daytime: React.FC = () => {
         (room?.currentDay || 0) / 2
       )}天】${mySeatId}号发动技能带走${killId}号玩家`,
     ]);
+    const newOutSkills = outSkills.filter((skill) => skill !== SkillEnum.kill);
+    setOutSkills(newOutSkills);
   };
 
   const onClickSheriffId = async () => {
@@ -416,6 +418,10 @@ const Daytime: React.FC = () => {
         (room?.currentDay || 0) / 2
       )}天】${mySeatId}号将警徽交给${toSheriffId}号玩家`,
     ]);
+    const newOutSkills = outSkills.filter(
+      (skill) => skill !== SkillEnum.sheriff
+    );
+    setOutSkills(newOutSkills);
   };
 
   if (!room) return;
