@@ -4,6 +4,7 @@ import {
   DaytimeStepDescriptions,
   IPlayer,
   IRoom,
+  NightStepTips,
   RoleEnum,
   WolfRoles,
 } from "./interface";
@@ -20,6 +21,7 @@ const Night: React.FC = () => {
   const [mySeatId, setMySeatId] = useState("");
   const [myPlayer, setMyPlayer] = useState<IPlayer>();
   const [myVote, setMyVote] = useState("");
+
   // 刷新
   const [refresh, setRefresh] = useState(false);
 
@@ -57,6 +59,9 @@ const Night: React.FC = () => {
     };
 
     fetchGameData();
+    //自动轮询
+    const intervalId = setInterval(fetchGameData, 3000);
+    return () => clearInterval(intervalId);
   }, [refresh]);
 
   // 投票
@@ -66,13 +71,13 @@ const Night: React.FC = () => {
       voting: id,
     });
     setMyVote(id);
-    onRefresh();
+    setRefresh(!refresh);
   };
 
-  // 继续
+  // 下一步
   const handleContinue = async () => {
     if (!myPlayer) return;
-    const { role, step, playerId } = myPlayer;
+    const { role, step, playerId, voted = [] } = myPlayer;
     const wolfMove = step === 1 && WolfRoles.includes(role);
     const witchMove = step === 2 && role === RoleEnum.witch;
     const seerMove = step === 3 && role === RoleEnum.seer;
@@ -80,6 +85,7 @@ const Night: React.FC = () => {
     if (wolfMove || witchMove || seerMove || guardMove) {
       await playerService.updatePlayer(playerId, {
         nightVoted: myVote,
+        voted: [...voted, myVote],
       });
     }
     await playerService.updatePlayer(playerId, {
@@ -89,11 +95,9 @@ const Night: React.FC = () => {
     await roomService.updateRoom(roomId, {
       step: step + 1,
     });
-    onRefresh();
-  };
-
-  // 刷新
-  const onRefresh = () => {
+    if (NightStepTips[step]) {
+      await roomService.updateRoomRecords(roomId, [NightStepTips[step]]);
+    }
     setRefresh(!refresh);
   };
 
@@ -123,7 +127,7 @@ const Night: React.FC = () => {
       voting: "-1",
     });
     setMyVote("-1");
-    onRefresh();
+    setRefresh(!refresh);
   };
 
   if (!room) return;
@@ -135,7 +139,6 @@ const Night: React.FC = () => {
         players={players}
         mySeatId={mySeatId}
         selectId={myVote}
-        onRefresh={onRefresh}
         handleMyVote={(id) => handleMyVote(id)}
         handleContinue={handleContinue}
         handleNextDay={handleNextDay}

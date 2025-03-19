@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styles from "./Seat.module.css";
 import playerIcon from "@/assets/player.png";
 import raiseHandIcon from "@/assets/raiseHand.png";
@@ -15,6 +14,7 @@ import { calculateMaxVoted } from "../utils";
 interface IProps {
   mySeatId: string;
   seatIds: string[];
+  showRole: boolean;
   seatedIds: string[]; // 已坐下的座位id
   selectId?: string;
   outIds?: string[];
@@ -25,10 +25,10 @@ interface IProps {
 }
 
 const Seats: React.FC<IProps> = (props) => {
-  const [showRole, setShowRole] = useState(false);
   const {
     mySeatId,
     seatIds,
+    showRole,
     seatedIds = [],
     selectId,
     outIds = [],
@@ -62,50 +62,38 @@ const Seats: React.FC<IProps> = (props) => {
           className={`${styles.seat} ${
             seatId === selectId ? styles.selected : ""
           }`}
+          onClick={() =>
+            seatedIds.includes(seatId) && handleSelectPlayer(seatId)
+          }
         >
           {outIds.includes(seatId) && (
             <div className={styles.overlay}>出局</div>
           )}
           {seatedIds.includes(seatId) && (
-            <div
-              onClick={() =>
-                seatedIds.includes(seatId) && handleSelectPlayer(seatId)
-              }
-            >
+            <div>
               {showRole && seatId === mySeatId ? (
                 <span>{RoleNameMap[role]}</span>
               ) : (
-                <img src={playerIcon} className={styles.playerIcon} />
+                <img
+                  src={
+                    players.find((player) => player.seatId === seatId)
+                      ?.isSheriff
+                      ? sheriffIcon
+                      : playerIcon
+                  }
+                  className={styles.playerIcon}
+                />
               )}
             </div>
           )}
-          {seatId === mySeatId && (
-            <div
-              className={styles.myself}
-              onClick={() => setShowRole(!showRole)}
-            >
-              你
-            </div>
-          )}
+          {seatId === mySeatId && <div className={styles.myself}>你</div>}
           {/* 申请警长 */}
           {players.find((player) => player.seatId === seatId)?.candidate &&
             step === 2 && (
-              <div
-                className={styles.candidate}
-                onClick={() => setShowRole(!showRole)}
-              >
+              <div className={styles.candidate}>
                 <img src={raiseHandIcon} className={styles.raiseHandIcon} />
               </div>
             )}
-          {/* 警长标识 */}
-          {players.find((player) => player.seatId === seatId)?.isSheriff && (
-            <div
-              className={styles.sheriff}
-              onClick={() => setShowRole(!showRole)}
-            >
-              <img src={sheriffIcon} className={styles.raiseHandIcon} />
-            </div>
-          )}
           {/* 狼人身份 */}
           {isNight &&
             step === 1 &&

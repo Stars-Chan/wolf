@@ -13,14 +13,14 @@
 
 .content {
   display: flex;
-  flex: 1;
+  height: 625px;
   flex-direction: column;
   margin: 0 5px;
   background-color: rgba(125, 125, 125, 0.3);
 }
 .header {
   color: #fff;
-  height: 60px;
+  padding-bottom: 10px;
 }
 .roomId {
   font-size: 18px;
@@ -78,4 +78,8 @@
 .roomButton:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+.steps {
+  color: #7fff00;
 }

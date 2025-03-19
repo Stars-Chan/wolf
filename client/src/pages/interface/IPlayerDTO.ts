@@ -5,6 +5,7 @@ export interface IPlayer {
   voting: string;
   nightVoted: string;
   daytimeVoted: string;
+  voted: string[];
   isAlive: boolean;
   candidate: boolean;
   isSheriff: boolean;

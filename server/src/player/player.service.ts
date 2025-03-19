@@ -20,7 +20,17 @@ export class PlayerService {
     // 查找玩家，如果不存在则创建
     const player = await this.playerModel.findOneAndUpdate(
       { playerId }, // 查询条件
-      { roomId, seatId, role, skills, isAlive: true, currentDay: 1, step: 1 }, // 更新内容
+      {
+        roomId,
+        seatId,
+        role,
+        skills,
+        isAlive: true,
+        currentDay: 1,
+        step: 1,
+        voted: [],
+        isSheriff: false,
+      }, // 更新内容
       {
         upsert: true, // 如果不存在则创建
         new: true, // 返回更新后的文档

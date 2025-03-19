@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { IPlayer, IRoom } from "../interface";
+import { IPlayer, IRoom, RoleEnum } from "../interface";
 import styles from "./Room.module.css";
 import Seats from "./Seats";
 
@@ -8,7 +8,6 @@ interface IProps {
   mySeatId: string;
   selectId?: string;
   players?: IPlayer[];
-  onRefresh: () => void;
   handleContinue: () => void;
   handleNextDay?: () => void;
   handleNotVote?: () => void;
@@ -18,13 +17,13 @@ interface IProps {
 const Room: React.FC<IProps> = (props) => {
   const [nextDayDisabled, setNextDayDisabled] = useState(false);
   const [continueDisabled, setContinueDisabled] = useState(false);
+  const [showRole, setShowRole] = useState(false);
   const {
     room,
     mySeatId,
     selectId,
     players = [],
     handleContinue,
-    onRefresh,
     handleNextDay,
     handleNotVote,
     handleMyVote,
@@ -42,7 +41,23 @@ const Room: React.FC<IProps> = (props) => {
   const myPlayer = players.find(
     (player) => player.playerId === `${roomId}-${mySeatId}`
   );
-  const { step = 0, currentDay = 0 } = myPlayer || {};
+  const { step = 0, currentDay = 0, role = "" } = myPlayer || {};
+  let roleStep = 0;
+  switch (role) {
+    case RoleEnum.werewolf:
+    case RoleEnum.wolfKing:
+      roleStep = 1;
+      break;
+    case RoleEnum.witch:
+      roleStep = 2;
+      break;
+    case RoleEnum.seer:
+      roleStep = 3;
+      break;
+    case RoleEnum.guard:
+      roleStep = 4;
+      break;
+  }
 
   const canMoveNow =
     step !== roomStep || players.every((player) => player.step === roomStep);
@@ -95,7 +110,6 @@ const Room: React.FC<IProps> = (props) => {
 
   // 天数
   const dayOfNumber = Math.ceil(currentDay / 2);
-  //
   const isNight = currentDay % 2 === 1;
   let outIds: string[] = [];
   if (players.length) {
@@ -117,6 +131,7 @@ const Room: React.FC<IProps> = (props) => {
         seatIds={["1", "2", "3", "4", "5", "6", "7"]}
         mySeatId={mySeatId}
         selectId={selectId}
+        showRole={showRole}
         seatedIds={leftPlayers}
         myPlayer={myPlayer}
         players={players}
@@ -147,7 +162,7 @@ const Room: React.FC<IProps> = (props) => {
             )}
           </div>
           {canMoveNow ? (
-            <div>
+            <div className={isNight && roleStep === step ? styles.steps : ""}>
               {steps.length && step > 0 ? steps[step - 1] : "等待游戏开始..."}
             </div>
           ) : (
@@ -174,8 +189,11 @@ const Room: React.FC<IProps> = (props) => {
           >
             {currentDay ? "下一步" : "开始游戏"}
           </button>
-          <button className={styles.roomButton} onClick={onRefresh}>
-            刷新
+          <button
+            className={styles.roomButton}
+            onClick={() => setShowRole(!showRole)}
+          >
+            查看身份
           </button>
           {Boolean(currentDay && handleNextDay) && (
             <button
@@ -202,6 +220,7 @@ const Room: React.FC<IProps> = (props) => {
         seatIds={["8", "9", "10", "11", "12", "13", "14"]}
         mySeatId={mySeatId}
         selectId={selectId}
+        showRole={showRole}
         seatedIds={rightPlayers}
         myPlayer={myPlayer}
         players={players}
